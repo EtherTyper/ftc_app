@@ -2,6 +2,7 @@ package org.firstinspires.ftc.omegas.sensor;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
+import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.omegas.HardwareOmegas;
@@ -27,6 +28,8 @@ public class OmegasUltrasonic extends LinearOpMode {
             public void init() {
                 initAppContext(hardwareMap);
                 initUltrasonicSensor(hardwareMap);
+                initDriveMotors(hardwareMap);
+                initLightSensor(hardwareMap);
                 initTelemetry(telemetry);
                 initAudio();
 
@@ -36,6 +39,17 @@ public class OmegasUltrasonic extends LinearOpMode {
 
         while (opModeIsActive()) {
             telemetry.addData("Ultrasonic levels:", Ω.getUltrasonicSensor().getUltrasonicLevel());
+            telemetry.update();
+
+            if (Ω.getUltrasonicSensor().getUltrasonicLevel() != 0) {
+                if (Ω.getUltrasonicSensor().getUltrasonicLevel() > 20) {
+                    for (DcMotor motor : Ω.getMotors()) {
+                        motor.setPower(0.25);
+                    }
+                } else {
+                    Ω.stopDriving();
+                }
+            }
         }
     }
 }

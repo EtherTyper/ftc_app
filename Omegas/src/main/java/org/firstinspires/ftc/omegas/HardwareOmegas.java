@@ -66,16 +66,16 @@ public abstract class HardwareOmegas {
     protected void initDriveMotors(HardwareMap hwMap) {
         // Define and Initialize Motors
         leftFrontMotor = hwMap.dcMotor.get(appContext.getString(R.string.leftFront));
-        leftBackMotor = hwMap.dcMotor.get(appContext.getString(R.string.leftBack));
+//        leftBackMotor = hwMap.dcMotor.get(appContext.getString(R.string.leftBack));
         rightFrontMotor = hwMap.dcMotor.get(appContext.getString(R.string.rightFront));
-        rightBackMotor = hwMap.dcMotor.get(appContext.getString(R.string.rightBack));
+//        rightBackMotor = hwMap.dcMotor.get(appContext.getString(R.string.rightBack));
 
         motors = new ArrayList<DcMotor>() {
             {
                 add(getLeftFrontMotor());
-                add(getLeftBackMotor());
+//                add(getLeftBackMotor());
                 add(getRightFrontMotor());
-                add(getRightBackMotor());
+//                add(getRightBackMotor());
             }
         };
 
@@ -87,9 +87,9 @@ public abstract class HardwareOmegas {
         }
 
         getLeftFrontMotor().setDirection(DcMotor.Direction.FORWARD);  // Set to REVERSE if using AndyMark motors
-        getLeftBackMotor().setDirection(DcMotor.Direction.FORWARD);   // Set to REVERSE if using AndyMark motors
+//        getLeftBackMotor().setDirection(DcMotor.Direction.FORWARD);   // Set to REVERSE if using AndyMark motors
         getRightFrontMotor().setDirection(DcMotor.Direction.REVERSE); // Set to FORWARD if using AndyMark motors
-        getRightBackMotor().setDirection(DcMotor.Direction.REVERSE);  // Set to FORWARD if using AndyMark motors
+//        getRightBackMotor().setDirection(DcMotor.Direction.REVERSE);  // Set to FORWARD if using AndyMark motors
 
     }
 
@@ -186,7 +186,7 @@ public abstract class HardwareOmegas {
     /**
      * Stop all four drive motors
      */
-    private void stopDriving() {
+    public void stopDriving() {
         for (DcMotor motor : getMotors()) {
             motor.setPower(0.0);
         }
