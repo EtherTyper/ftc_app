@@ -57,11 +57,12 @@ public class OmegasLinear extends LinearOpMode {
 
     /* Declare OpMode members. */
     private ElapsedTime runtime = new ElapsedTime();
-    HardwareOmegas Ω = null;
+    private HardwareOmegas Ω = null;
 
     // IPS Units
     static final double FORWARD_SPEED = 0.6;
     static final double TURN_SPEED = 0.5;
+    static boolean safeMode = false;
 
     @Override
     public void runOpMode() {
@@ -104,6 +105,23 @@ public class OmegasLinear extends LinearOpMode {
                 }
             }
         }.start();
+
+        /**
+         * X Button (safe-mode toggle) watch Thread
+         */
+        new Thread() {
+            @Override
+            public void run() {
+                ElapsedTime timeSincePressed = new ElapsedTime();
+
+                while (opModeIsActive()) {
+                    if (gamepad1.x && timeSincePressed.milliseconds() > 500) {
+                        safeMode = !safeMode;
+                        timeSincePressed.reset();
+                    }
+                }
+            }
+        }
 
         // run until the end of the match (driver presses STOP)
         while (opModeIsActive()) {
