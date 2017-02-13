@@ -44,6 +44,7 @@ public abstract class HardwareOmegas {
     private DcMotor rightBackMotor;
     private Servo leftBeaconator;
     private Servo rightBeaconator;
+    private Servo liftServo;
 
     private ArrayList<DcMotor> motors;
     private Context appContext;
@@ -99,6 +100,10 @@ public abstract class HardwareOmegas {
         // Change the text in quotes to match any servo name on your robot.
         leftBeaconator = hwMap.servo.get(appContext.getString(R.string.leftBeaconator));
         rightBeaconator = hwMap.servo.get(appContext.getString(R.string.rightBeaconator));
+    }
+
+    protected void initLiftServo(HardwareMap hwMap) {
+        liftServo = hwMap.servo.get("lift_servo");
     }
 
     /* Initialize LineSensor interfaces */
@@ -267,6 +272,10 @@ public abstract class HardwareOmegas {
 
     public Servo getRightBeaconator() {
         return rightBeaconator;
+    }
+
+    public Servo getLiftServo() {
+        return liftServo;
     }
 
     public ArrayList<DcMotor> getMotors() {
