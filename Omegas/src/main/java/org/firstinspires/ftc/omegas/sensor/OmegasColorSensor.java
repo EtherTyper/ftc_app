@@ -55,9 +55,6 @@ class OmegasColorSensor extends ManualVisionOpMode {
             @Override
             public void init() {
                 initAppContext(hardwareMap);
-                initLightSensor(hardwareMap);
-                initDriveMotors(hardwareMap);
-                initBeaconators(hardwareMap);
                 initTelemetry(telemetry);
                 initAudio();
 
