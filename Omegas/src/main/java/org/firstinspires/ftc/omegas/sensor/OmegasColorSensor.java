@@ -59,7 +59,6 @@ public class OmegasColorSensor extends ManualVisionOpMode {
                 initTelemetry(telemetry);
                 initAudio();
 
-                getLightSensor().enableLed(true);
                 sayMessage();
             }
         };
