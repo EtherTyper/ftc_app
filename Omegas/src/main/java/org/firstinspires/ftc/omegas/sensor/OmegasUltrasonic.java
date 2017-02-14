@@ -33,23 +33,54 @@ public class OmegasUltrasonic extends LinearOpMode {
                 initTelemetry(telemetry);
                 initAudio();
 
+                getLightSensor().enableLed(true);
                 sayMessage();
             }
         };
 
-        while (opModeIsActive()) {
-            telemetry.addData("Ultrasonic levels:", Ω.getUltrasonicSensor().getUltrasonicLevel());
-            telemetry.update();
+        double light = 0.0;
+        boolean wallDetected = false;
+        double ultrasonicLevel = 0.0;
 
-            if (Ω.getUltrasonicSensor().getUltrasonicLevel() != 0) {
-                if (Ω.getUltrasonicSensor().getUltrasonicLevel() > 20) {
-                    for (DcMotor motor : Ω.getMotors()) {
-                        motor.setPower(0.25);
-                    }
-                } else {
-                    Ω.stopDriving();
+        // Seek the white line.
+        while (opModeIsActive() && light < 0.3 ) {
+            light = Ω.getLightSensor().getLightDetected();
+            telemetry.addData("Data", "Light amount: " + light);
+            telemetry.update();
+            for (DcMotor motor: Ω.getMotors()) {
+                motor.setPower(0.25);
+            }
+        }
+        Ω.getLightSensor().enableLed(false);
+
+        // Rest momentarily.
+        Thread.sleep(200);
+        Ω.stopDriving();
+
+        // Rotate robot.
+        telemetry.addData("Data", "Turning Robot...");
+        telemetry.update();
+        Ω.rotate(Math.PI * 4 / 9, true);
+
+        // Seek the wall.
+        while (opModeIsActive() && !wallDetected) {
+            double newUltrasonicLevel = Ω.getUltrasonicSensor().getUltrasonicLevel();
+            ultrasonicLevel = newUltrasonicLevel != 0 && newUltrasonicLevel != 255 ? newUltrasonicLevel : ultrasonicLevel;
+
+            if (ultrasonicLevel < 15.0) {
+                telemetry.addData("Data", "WALL DETECTED, Ultrasonic levels: " + ultrasonicLevel);
+                telemetry.update();
+                wallDetected = true;
+            } else {
+                telemetry.addData("Data", "NOT DETECTED, Ultrasonic levels: " + ultrasonicLevel);
+                telemetry.update();
+                for (DcMotor motor: Ω.getMotors()) {
+                    motor.setPower(0.25);
                 }
             }
         }
+
+        // Done!
+        Ω.stopDriving();
     }
 }

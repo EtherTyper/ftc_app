@@ -13,6 +13,7 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 
 import java.util.ArrayList;
+import java.util.function.BooleanSupplier;
 
 /**
  * This is NOT an opmode.
@@ -157,9 +158,9 @@ public abstract class HardwareOmegas {
         double multiplier = right ? 1 : -1;
 
         while (timePushed.milliseconds() < radians * MS_PER_RADIAN) {
-            getLeftBackMotor().setPower(0.75 * multiplier);
+//            getLeftBackMotor().setPower(0.75 * multiplier);
             getLeftFrontMotor().setPower(0.75 * multiplier);
-            getRightBackMotor().setPower(-0.75 * multiplier);
+//            getRightBackMotor().setPower(-0.75 * multiplier);
             getRightFrontMotor().setPower(-0.75 * multiplier);
         }
 
