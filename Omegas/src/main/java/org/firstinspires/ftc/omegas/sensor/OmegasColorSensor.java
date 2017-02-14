@@ -27,8 +27,9 @@ import java.util.Arrays;
  * Please note that you cannot use any Vision Extensions in a ManualVisionOpMode, but you
  * can still call the extensions' init(), loop(), and frame() methods if you want to use them,
  */
-@Autonomous(name = "Color Sensor Test", group = "Tests")
-class OmegasColorSensor extends ManualVisionOpMode {
+@SuppressWarnings("unused")
+@Autonomous(name = "Omegas: Color Sensor Test", group = "Tests")
+public class OmegasColorSensor extends ManualVisionOpMode {
 
     /* Declare OpMode members. */
     private HardwareOmegas Ω = null;
