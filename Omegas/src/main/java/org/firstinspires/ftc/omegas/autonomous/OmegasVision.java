@@ -64,6 +64,7 @@ abstract class OmegasVision extends ManualVisionOpMode {
                 initLightSensor(hardwareMap);
                 initDriveMotors(hardwareMap);
                 initBeaconators(hardwareMap);
+                initUltrasonicSensor(hardwareMap);
                 initTelemetry(telemetry);
                 initAudio();
 
@@ -125,6 +126,8 @@ abstract class OmegasVision extends ManualVisionOpMode {
 
         if (driveThread == null) driveThread = new Thread() {
             public void run() {
+                double ultrasonicLevel = 256;
+
                 while (true) {
                     if (interrupted() || shouldApproachBeaconator) {
                         return;
@@ -133,7 +136,21 @@ abstract class OmegasVision extends ManualVisionOpMode {
                             Ω.rotate(Math.PI * 1 / 2, getColor() == OmegasAlliance.BLUE);
                             Ω.driveForward(0.25, 600.0);
 
-                            shouldApproachBeaconator = true;
+                            double newUltrasonicLevel = Ω.getUltrasonicSensor().getUltrasonicLevel();
+                            ultrasonicLevel = newUltrasonicLevel != 0 && newUltrasonicLevel != 255 ? newUltrasonicLevel : ultrasonicLevel;
+
+                            if (ultrasonicLevel < 15.0) {
+                                telemetry.addData("Data", "WALL DETECTED, Ultrasonic levels: " + ultrasonicLevel);
+                                telemetry.update();
+
+                                shouldApproachBeaconator = true;
+                            } else {
+                                telemetry.addData("Data", "NOT DETECTED, Ultrasonic levels: " + ultrasonicLevel);
+                                telemetry.update();
+                                for (DcMotor motor: Ω.getMotors()) {
+                                    motor.setPower(0.25);
+                                }
+                            }
                         } else {
                             for (DcMotor motor : Ω.getMotors()) {
                                 motor.setPower(0.25);
