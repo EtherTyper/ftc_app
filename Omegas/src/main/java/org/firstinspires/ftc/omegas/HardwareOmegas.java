@@ -67,16 +67,16 @@ public abstract class HardwareOmegas {
     protected void initDriveMotors(HardwareMap hwMap) {
         // Define and Initialize Motors
         leftFrontMotor = hwMap.dcMotor.get(appContext.getString(R.string.leftFront));
-//        leftBackMotor = hwMap.dcMotor.get(appContext.getString(R.string.leftBack));
+        leftBackMotor = hwMap.dcMotor.get(appContext.getString(R.string.leftBack));
         rightFrontMotor = hwMap.dcMotor.get(appContext.getString(R.string.rightFront));
-//        rightBackMotor = hwMap.dcMotor.get(appContext.getString(R.string.rightBack));
+        rightBackMotor = hwMap.dcMotor.get(appContext.getString(R.string.rightBack));
 
         motors = new ArrayList<DcMotor>() {
             {
                 add(getLeftFrontMotor());
-//                add(getLeftBackMotor());
+                add(getLeftBackMotor());
                 add(getRightFrontMotor());
-//                add(getRightBackMotor());
+                add(getRightBackMotor());
             }
         };
 
@@ -88,9 +88,9 @@ public abstract class HardwareOmegas {
         }
 
         getLeftFrontMotor().setDirection(DcMotor.Direction.FORWARD);  // Set to REVERSE if using AndyMark motors
-//        getLeftBackMotor().setDirection(DcMotor.Direction.FORWARD);   // Set to REVERSE if using AndyMark motors
+        getLeftBackMotor().setDirection(DcMotor.Direction.FORWARD);   // Set to REVERSE if using AndyMark motors
         getRightFrontMotor().setDirection(DcMotor.Direction.REVERSE); // Set to FORWARD if using AndyMark motors
-//        getRightBackMotor().setDirection(DcMotor.Direction.REVERSE);  // Set to FORWARD if using AndyMark motors
+        getRightBackMotor().setDirection(DcMotor.Direction.REVERSE);  // Set to FORWARD if using AndyMark motors
 
     }
 
@@ -158,9 +158,9 @@ public abstract class HardwareOmegas {
         double multiplier = right ? 1 : -1;
 
         while (timePushed.milliseconds() < radians * MS_PER_RADIAN) {
-//            getLeftBackMotor().setPower(0.75 * multiplier);
+            getLeftBackMotor().setPower(0.75 * multiplier);
             getLeftFrontMotor().setPower(0.75 * multiplier);
-//            getRightBackMotor().setPower(-0.75 * multiplier);
+            getRightBackMotor().setPower(-0.75 * multiplier);
             getRightFrontMotor().setPower(-0.75 * multiplier);
         }
 
