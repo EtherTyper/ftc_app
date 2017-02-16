@@ -124,42 +124,46 @@ abstract class OmegasVision extends ManualVisionOpMode {
         telemetry.addData("Data", "Light sensor activated: " + (light > 0.4));
         telemetry.update();
 
-        if (driveThread == null) driveThread = new Thread() {
-            public void run() {
-                double ultrasonicLevel = 256;
+        if (driveThread == null) {
+            driveThread = new Thread() {
+                public void run() {
+                    double ultrasonicLevel = 256;
 
-                while (true) {
-                    if (interrupted() || shouldApproachBeaconator) {
-                        return;
-                    } else {
-                        if (Ω.getLightSensor().getLightDetected() >= 0.4) {
-                            Ω.rotate(Math.PI * 1 / 2, getColor() == OmegasAlliance.BLUE);
-                            Ω.driveForward(0.25, 600.0);
+                    while (true) {
+                        if (shouldApproachBeaconator) {
+                            return;
+                        } else {
+                            if (Ω.getLightSensor().getLightDetected() >= 0.4) {
+                                Ω.rotate(Math.PI * 1 / 2, getColor() == OmegasAlliance.BLUE);
+                                Ω.driveForward(0.25, 600.0);
 
-                            double newUltrasonicLevel = Ω.getUltrasonicSensor().getUltrasonicLevel();
-                            ultrasonicLevel = newUltrasonicLevel != 0 && newUltrasonicLevel != 255 ? newUltrasonicLevel : ultrasonicLevel;
+                                double newUltrasonicLevel = Ω.getUltrasonicSensor().getUltrasonicLevel();
+                                ultrasonicLevel = newUltrasonicLevel != 0 && newUltrasonicLevel != 255 ? newUltrasonicLevel : ultrasonicLevel;
 
-                            if (ultrasonicLevel < 15.0) {
-                                telemetry.addData("Data", "WALL DETECTED, Ultrasonic levels: " + ultrasonicLevel);
-                                telemetry.update();
+                                if (ultrasonicLevel < 15.0) {
+                                    telemetry.addData("Data", "WALL DETECTED, Ultrasonic levels: " + ultrasonicLevel);
+                                    telemetry.update();
 
-                                shouldApproachBeaconator = true;
+                                    shouldApproachBeaconator = true;
+                                } else {
+                                    telemetry.addData("Data", "NOT DETECTED, Ultrasonic levels: " + ultrasonicLevel);
+                                    telemetry.update();
+                                    for (DcMotor motor: Ω.getMotors()) {
+                                        motor.setPower(0.25);
+                                    }
+                                }
                             } else {
-                                telemetry.addData("Data", "NOT DETECTED, Ultrasonic levels: " + ultrasonicLevel);
-                                telemetry.update();
-                                for (DcMotor motor: Ω.getMotors()) {
+                                for (DcMotor motor : Ω.getMotors()) {
                                     motor.setPower(0.25);
                                 }
-                            }
-                        } else {
-                            for (DcMotor motor : Ω.getMotors()) {
-                                motor.setPower(0.25);
                             }
                         }
                     }
                 }
-            }
-        };
+            };
+
+            driveThread.start();
+        }
 
         if (approachedCapBall) approachCapBall();
         if (shouldApproachBeaconator) approachBeaconator(leftBlue, rightBlue);

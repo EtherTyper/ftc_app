@@ -79,7 +79,7 @@ public class OmegasAutonomous extends LinearOpMode {
                     Ω.sayMessage();
                     messageSaid = true;
                 } else if (runtime.milliseconds() > 10000 && !finishedDrive) {
-                    Ω.driveForward(0.5, 1800);
+                    Ω.driveForward(0.25, 1800);
                     finishedDrive = true;
                 }
             }
