@@ -134,12 +134,12 @@ abstract class OmegasVision extends ManualVisionOpMode {
                             return;
                         } else {
                             if (Ω.getLightSensor().getLightDetected() >= 0.4) {
-                                Ω.rotate(Math.PI * 1 / 2, getColor() == OmegasAlliance.BLUE);
+                                Ω.rotate(Math.PI * 5/9, getColor() == OmegasAlliance.BLUE);
 
                                 double newUltrasonicLevel = Ω.getUltrasonicSensor().getUltrasonicLevel();
                                 ultrasonicLevel = newUltrasonicLevel != 0 && newUltrasonicLevel != 255 ? newUltrasonicLevel : ultrasonicLevel;
 
-                                if (ultrasonicLevel < 15.0) {
+                                if (ultrasonicLevel < 20.0) {
                                     telemetry.addData("Data", "WALL DETECTED, Ultrasonic levels: " + ultrasonicLevel);
                                     telemetry.update();
 
