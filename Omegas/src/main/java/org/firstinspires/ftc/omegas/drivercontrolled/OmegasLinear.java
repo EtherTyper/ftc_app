@@ -34,6 +34,7 @@ package org.firstinspires.ftc.omegas.drivercontrolled;
 
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
+import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.omegas.HardwareOmegas;
@@ -129,11 +130,17 @@ public class OmegasLinear extends LinearOpMode {
             telemetry.addData("Status", "Run Time: " + runtime.toString());
             telemetry.update();
 
-            // eg: Run wheels in tank mode (note: The joystick goes negative when pushed forwards)
-            Ω.getLeftBackMotor().setPower(-gamepad1.left_stick_y);
-            Ω.getLeftFrontMotor().setPower(-gamepad1.left_stick_y);
-            Ω.getRightBackMotor().setPower(-gamepad1.right_stick_y);
-            Ω.getRightFrontMotor().setPower(-gamepad1.right_stick_y);
+            if (!safeMode) {
+                // eg: Run wheels in tank mode (note: The joystick goes negative when pushed forwards)
+                Ω.getLeftBackMotor().setPower(-gamepad1.left_stick_y);
+                Ω.getLeftFrontMotor().setPower(-gamepad1.left_stick_y);
+                Ω.getRightBackMotor().setPower(-gamepad1.right_stick_y);
+                Ω.getRightFrontMotor().setPower(-gamepad1.right_stick_y);
+            } else {
+                for (DcMotor motor: Ω.getMotors()) {
+                    motor.setPower(0);
+                }
+            }
 
             telemetry.addData("Status", "Run Time: " + runtime.toString() + " " + -gamepad1.right_stick_y + " " + -gamepad1.right_stick_y);
         }
