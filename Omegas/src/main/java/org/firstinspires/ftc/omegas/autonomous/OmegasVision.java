@@ -135,7 +135,6 @@ abstract class OmegasVision extends ManualVisionOpMode {
                         } else {
                             if (Ω.getLightSensor().getLightDetected() >= 0.4) {
                                 Ω.rotate(Math.PI * 1 / 2, getColor() == OmegasAlliance.BLUE);
-                                Ω.driveForward(0.25, 600.0);
 
                                 double newUltrasonicLevel = Ω.getUltrasonicSensor().getUltrasonicLevel();
                                 ultrasonicLevel = newUltrasonicLevel != 0 && newUltrasonicLevel != 255 ? newUltrasonicLevel : ultrasonicLevel;
