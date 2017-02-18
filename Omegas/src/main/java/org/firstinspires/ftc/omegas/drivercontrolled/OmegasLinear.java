@@ -125,10 +125,15 @@ public class OmegasLinear extends LinearOpMode {
             }
         };
 
+        double ultrasonicLevel = 256.0;
+
         // run until the end of the match (driver presses STOP)
         while (opModeIsActive()) {
             telemetry.addData("Status", "Run Time: " + runtime.toString());
             telemetry.update();
+
+            double newUltrasonicLevel = Ω.getUltrasonicSensor().getUltrasonicLevel();
+            ultrasonicLevel = newUltrasonicLevel != 0 && newUltrasonicLevel != 255 ? newUltrasonicLevel : ultrasonicLevel;
 
             if (!safeMode) {
                 // eg: Run wheels in tank mode (note: The joystick goes negative when pushed forwards)
@@ -136,8 +141,9 @@ public class OmegasLinear extends LinearOpMode {
                 Ω.getLeftFrontMotor().setPower(-gamepad1.left_stick_y);
                 Ω.getRightBackMotor().setPower(-gamepad1.right_stick_y);
                 Ω.getRightFrontMotor().setPower(-gamepad1.right_stick_y);
-            } else {
-                for (DcMotor motor: Ω.getMotors()) {
+            } else if (ultrasonicLevel <= 20) {
+                for (DcMotor motor : Ω.getMotors()) {
+
                     motor.setPower(0);
                 }
             }
