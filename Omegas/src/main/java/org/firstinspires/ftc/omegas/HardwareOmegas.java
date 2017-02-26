@@ -189,7 +189,7 @@ public abstract class HardwareOmegas {
     /**
      * Stop all four drive motors
      */
-    private void stopDriving() {
+    public void stopDriving() {
         for (DcMotor motor : getMotors()) {
             motor.setPower(0.0);
         }

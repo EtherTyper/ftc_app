@@ -34,6 +34,7 @@ package org.firstinspires.ftc.omegas.drivercontrolled;
 
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
+import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.omegas.HardwareOmegas;
@@ -57,11 +58,12 @@ public class OmegasLinear extends LinearOpMode {
 
     /* Declare OpMode members. */
     private ElapsedTime runtime = new ElapsedTime();
-    HardwareOmegas Ω = null;
+    private HardwareOmegas Ω = null;
 
     // IPS Units
     static final double FORWARD_SPEED = 0.6;
     static final double TURN_SPEED = 0.5;
+    static boolean safeMode = false;
 
     @Override
     public void runOpMode() {
@@ -78,6 +80,7 @@ public class OmegasLinear extends LinearOpMode {
                 initAppContext(hardwareMap);
                 initDriveMotors(hardwareMap);
                 initBeaconators(hardwareMap);
+                initUltrasonicSensor(hardwareMap);
                 initTelemetry(telemetry);
                 initAudio();
 
@@ -105,16 +108,45 @@ public class OmegasLinear extends LinearOpMode {
             }
         }.start();
 
+        /**
+         * X Button (safe-mode toggle) watch Thread
+         */
+        new Thread() {
+            @Override
+            public void run() {
+                ElapsedTime timeSincePressed = new ElapsedTime();
+
+                while (opModeIsActive()) {
+                    if (gamepad1.x && timeSincePressed.milliseconds() > 500) {
+                        safeMode = !safeMode;
+                        timeSincePressed.reset();
+                    }
+                }
+            }
+        };
+
+        double ultrasonicLevel = 256.0;
+
         // run until the end of the match (driver presses STOP)
         while (opModeIsActive()) {
             telemetry.addData("Status", "Run Time: " + runtime.toString());
             telemetry.update();
 
-            // eg: Run wheels in tank mode (note: The joystick goes negative when pushed forwards)
-            Ω.getLeftBackMotor().setPower(-gamepad1.left_stick_y);
-            Ω.getLeftFrontMotor().setPower(-gamepad1.left_stick_y);
-            Ω.getRightBackMotor().setPower(-gamepad1.right_stick_y);
-            Ω.getRightFrontMotor().setPower(-gamepad1.right_stick_y);
+            double newUltrasonicLevel = Ω.getUltrasonicSensor().getUltrasonicLevel();
+            ultrasonicLevel = newUltrasonicLevel != 0 && newUltrasonicLevel != 255 ? newUltrasonicLevel : ultrasonicLevel;
+
+            if (!safeMode) {
+                // eg: Run wheels in tank mode (note: The joystick goes negative when pushed forwards)
+                Ω.getLeftBackMotor().setPower(-gamepad1.left_stick_y);
+                Ω.getLeftFrontMotor().setPower(-gamepad1.left_stick_y);
+                Ω.getRightBackMotor().setPower(-gamepad1.right_stick_y);
+                Ω.getRightFrontMotor().setPower(-gamepad1.right_stick_y);
+            } else if (ultrasonicLevel <= 20) {
+                for (DcMotor motor : Ω.getMotors()) {
+
+                    motor.setPower(0);
+                }
+            }
 
             telemetry.addData("Status", "Run Time: " + runtime.toString() + " " + -gamepad1.right_stick_y + " " + -gamepad1.right_stick_y);
         }
