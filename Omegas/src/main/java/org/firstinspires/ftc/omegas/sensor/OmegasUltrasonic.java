@@ -33,7 +33,7 @@ public class OmegasUltrasonic extends LinearOpMode {
                 initTelemetry(telemetry);
                 initAudio();
 
-                getLightSensor().enableLed(true);
+                getFrontLightSensor().enableLed(true);
                 sayMessage();
             }
         };
@@ -44,14 +44,14 @@ public class OmegasUltrasonic extends LinearOpMode {
 
         // Seek the white line.
         while (opModeIsActive() && light < 0.3 ) {
-            light = Ω.getLightSensor().getLightDetected();
+            light = Ω.getFrontLightSensor().getLightDetected();
             telemetry.addData("Data", "Light amount: " + light);
             telemetry.update();
             for (DcMotor motor: Ω.getMotors()) {
                 motor.setPower(0.25);
             }
         }
-        Ω.getLightSensor().enableLed(false);
+        Ω.getFrontLightSensor().enableLed(false);
 
         // Rest momentarily.
         Thread.sleep(200);
