@@ -68,7 +68,7 @@ abstract class OmegasVision extends ManualVisionOpMode {
                 initTelemetry(telemetry);
                 initAudio();
 
-                getLightSensor().enableLed(true);
+                getFrontLightSensor().enableLed(true);
                 sayMessage();
             }
         };
@@ -97,7 +97,7 @@ abstract class OmegasVision extends ManualVisionOpMode {
 
         double leftBlue = 0.0, rightBlue = 0.0;
         int leftCount = 0, rightCount = 0;
-        final double light = Ω.getLightSensor().getLightDetected();
+        final double light = Ω.getFrontLightSensor().getLightDetected();
 
         for (int i = beaconColorArrayList.size() - 1; i > 0 && leftCount <= 100; i--) {
             if (beaconColorArrayList.get(i).left != OmegasBeacon.Color.UNDEFINED) {
@@ -129,11 +129,11 @@ abstract class OmegasVision extends ManualVisionOpMode {
                 public void run() {
                     double ultrasonicLevel = 256;
 
-                    while (true) {
+                  while (true) {
                         if (shouldApproachBeaconator) {
                             return;
                         } else {
-                            if (Ω.getLightSensor().getLightDetected() >= 0.4) {
+                            if (Ω.getFrontLightSensor().getLightDetected() >= 0.4) {
                                 Ω.rotate(Math.PI * 5/9, getColor() == OmegasAlliance.BLUE);
 
                                 double newUltrasonicLevel = Ω.getUltrasonicSensor().getUltrasonicLevel();
